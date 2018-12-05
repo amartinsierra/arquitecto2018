@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+
+<script type="text/javascript">
+	var ws;
+	function conectar(){
+		var url="ws://10.2.4.100:8080/03_servidor_chat/chat";
+		ws=new WebSocket(url);
+		ws.onopen=function(evt){
+			document.getElementById("chat").style.display="block";
+		}
+		ws.onclose=function(evt){
+			document.getElementById("chat").style.display="none";
+		}
+		ws.onmessage=function(evt){
+			var mensajes=document.getElementById("mensajes");
+			mensajes.innerHTML+=evt.data+"<br/>";
+		}
+	}
+	
+	function enviar(){
+		var obj=new Object();
+		obj.nombre=document.getElementById("nombre").value;
+		obj.mensaje=document.getElementById("mensaje").value;
+		
+		ws.send(JSON.stringify(obj));
+	}
+	
+	function desconectar(){
+		ws.close();
+	}
+
+
+</script>
+
+</head>
+<body>
+
+Nombre:<input type="text" id="nombre"/><input type="button" value="Conectar" onclick="conectar();"/><br/><br/>
+
+<div id="chat" style="display:none">
+	<hr/>
+	Texto:<textarea id="mensaje" placeholder="texto aqui">
+	
+	</textarea><br/>
+	<input type="button" value="Enviar" onclick="enviar();"/><br/><br/><hr/>
+	<div id="mensajes">
+	
+	
+	</div>
+	<br/>
+	<hr/>
+	<br/>
+	<input type="button" value="Cerrar" onclick="desconectar();"/>
+</div>
+
+</body>
+</html>
